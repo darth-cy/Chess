@@ -1,7 +1,6 @@
 require "colorize"
 require 'byebug'
-require_relative 'stepping_piece'
-require_relative 'sliding_piece'
+require_relative 'allpiece'
 
 class Board
   attr_accessor :rows
@@ -21,16 +20,9 @@ class Board
   end
 
   def valid_moves(pos)
-    piece_moves = self[pos].moves
-    possible_moves = []
-
-    piece_moves.each do |pair|
-      possible_move = self.dup.move(pos, pair)
-      possible_moves << pair if !possible_move.in_check?(self[pos].color)
-    end
-
-    possible_moves
-
+    self[pos].moves.map do |to|
+      self.dup.move(pos, to).in_check?(self[pos].color) ? nil : to
+    end.compact
   end
 
   def set_pieces
@@ -40,18 +32,15 @@ class Board
 
     row_idxs.each do |row_idx|
       player = :W if row_idx == 7
-
       pieces.each_with_index do |piece, idx|
         @rows[row_idx][idx] = piece.new(player, [row_idx, idx], self)
       end
-
     end
 
     (0..7).each do |idx|
       @rows[1][idx] = Pawn.new(:B, [1, idx], self)
       @rows[6][idx] = Pawn.new(:W, [6, idx], self)
     end
-
   end
 
   def [](pos)
@@ -64,21 +53,8 @@ class Board
     @rows[row][col] = mark
   end
 
-  def render
-    header = "   " + (0..7).to_a.map { |num| " #{num.to_s} " }.join
-    puts header
-    @rows.each_with_index do |row, r_idx|
-      print " #{r_idx} "
-      row.each_with_index do |cell, c_idx|
-        color = (r_idx + c_idx) % 2 == 0 ? :red : :black
-        print cell.render.colorize(:background => color)
-      end
-      puts
-    end
-  end
-
   def in_check?(player)
-    king_pos =[]
+    king_pos = []
 
     pieces.each do |piece|
       king_pos = piece.pos if piece.king? && piece.is_ally?(player)
@@ -89,7 +65,6 @@ class Board
     end
 
     false
-
   end
 
   def pieces
@@ -109,25 +84,21 @@ class Board
   end
 
   def checkmate?(player)
-
-    all_pos = pieces.select { |piece| piece.is_ally?(player) }.map { |piece| piece.pos }
+    all_pos = pieces.select { |piece| piece.is_ally?(player) }
+                    .map { |piece| piece.pos }
     all_pos.all? { |pos| valid_moves(pos).empty? }
-
   end
 
   def move(from, to)
-
     if self[to].is_enemy?(from)
       self[to] = EmptyPiece.new
     end
 
-    self[from].moved if self[from].is_pawn?
+    self[from].has_moved if self[from].is_pawn?
 
     self[from].change_pos(to)
     self[to], self[from] = self[from], self[to]
 
     self
-
   end
-
 end

@@ -53,11 +53,9 @@ class Piece
   def is_pawn?
     false
   end
-
 end
 
 class EmptyPiece < Piece
-
   def initialize
 
   end
@@ -81,5 +79,4 @@ class EmptyPiece < Piece
   def dup
     EmptyPiece.new
   end
-
 end

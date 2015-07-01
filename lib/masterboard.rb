@@ -12,7 +12,8 @@ class MasterBoard < Board
     @moved = false
   end
 
-  def render
+  def render(player)
+    update_reachable(player)
     system "clear"
     header = "   " + ("a".."h").to_a.map { |letter| " #{letter} " }.join
     puts header
@@ -30,37 +31,33 @@ class MasterBoard < Board
   end
 
   def read_command(player, command)
-    move_around(player, command)
-    select_cell(player, command)
+    if CURSOR_DIRECTIONS.include?(command)
+      move_around(player, command)
+    elsif command == "RETURN"
+      select_cell(player, command)
+    end
   end
 
   def move_around(player, command)
-    return unless CURSOR_DIRECTIONS.include?(command)
     case command
     when 'w'
       move = [@highlighted_cell.first - 1, @highlighted_cell.last]
-      @highlighted_cell = move if valid?(move)
     when 's'
       move = [@highlighted_cell.first + 1, @highlighted_cell.last]
-      @highlighted_cell = move if valid?(move)
     when 'a'
       move = [@highlighted_cell.first, @highlighted_cell.last - 1]
-      @highlighted_cell = move if valid?(move)
     when 'd'
       move = [@highlighted_cell.first, @highlighted_cell.last + 1]
-      @highlighted_cell = move if valid?(move)
     end
-    recalculate(player)
+    @highlighted_cell = move if valid?(move)
   end
 
-  def recalculate(player)
+  def update_reachable(player)
     return [] if self[@highlighted_cell].is_enemy?(player)
     @reachable = self.valid_moves(@highlighted_cell)
   end
 
   def select_cell(player, command)
-    return unless command == "RETURN"
-
     if @selected.nil? && self[@highlighted_cell].is_ally?(player)
       @selected = @highlighted_cell
     elsif !@selected.nil? && self.valid_moves(@selected).include?(@highlighted_cell)
@@ -69,7 +66,6 @@ class MasterBoard < Board
     else
       @selected = nil
     end
-
   end
 
   def to_move
@@ -79,5 +75,4 @@ class MasterBoard < Board
   def moved?
     @moved
   end
-
 end

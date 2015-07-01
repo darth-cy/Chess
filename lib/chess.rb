@@ -12,37 +12,35 @@ class Chess
   end
 
   def play
-
     until over?
-
       take_turn
-
     end
-
+    @board.render(@players.last)
     puts "FINISHED. #{@players.last} is in checkmate and lost the game."
-
   end
 
   def take_turn
+    switch_player
     @board.to_move
-    player = switch_player
-
+    player = @players.first
     until @board.moved?
-      @board.render
+      @board.render(player)
       command = read_single_key
       @board.read_command(player, command)
     end
-
   end
 
   def switch_player
-    @current_player = @players.rotate!.first
+    @players.rotate!
   end
 
   def over?
-    @board.checkmate?(@players.last)
+    if @board.in_check?(@players.last)
+      @board.checkmate?(@players.last)
+  #  elsif @board.stalemate?(players.last)
+      #
+    end
   end
-
 end
 
 chess = Chess.new
