@@ -9,12 +9,6 @@ class Board
     @rows = Array.new(8) { Array.new(8) { EmptyPiece.new } }
   end
 
-  def self.standard_board
-    b = Board.new
-    b.set_pieces
-    b
-  end
-
   def valid?(move)
     move.all? { |el| el.between?(0, 7) }
   end
@@ -41,6 +35,12 @@ class Board
       @rows[1][idx] = Pawn.new(:B, [1, idx], self)
       @rows[6][idx] = Pawn.new(:W, [6, idx], self)
     end
+  end
+
+  def set_stalemate
+    @rows[0][7] = King.new(:B, [0, 7], self)
+    @rows[7][6] = Queen.new(:W, [7, 6], self)
+    @rows[0][0] = King.new(:W, [0, 0], self)
   end
 
   def [](pos)

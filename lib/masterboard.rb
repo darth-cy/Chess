@@ -28,6 +28,12 @@ class MasterBoard < Board
       end
       puts
     end
+    puts
+
+    puts "It is #{player}'s turn: "
+    puts "Use arrow keys to move around the board. Use <Enter> to select the piece."
+    puts "Use <ESC> to save the game."
+
   end
 
   def read_command(player, command)
