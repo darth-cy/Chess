@@ -46,6 +46,14 @@ class Piece
     raise "Piece should not render (ambiguous piece)."
   end
 
+  def change_pos(pos)
+    @pos = pos
+  end
+
+  def is_pawn?
+    false
+  end
+
 end
 
 class EmptyPiece < Piece

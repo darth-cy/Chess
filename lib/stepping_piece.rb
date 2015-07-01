@@ -70,6 +70,14 @@ class Pawn < SteppingPiece
     @moved = false
   end
 
+  def moved
+    @moved = true
+  end
+
+  def is_pawn?
+    true
+  end
+
   def moves
     valid_moves = []
 
@@ -84,7 +92,7 @@ class Pawn < SteppingPiece
 
     step = (@color == :B) ? 1 : -1
     move = [row += step, col]
-    return valid_moves if !valid?(move) || ally?(move)
+    return valid_moves if !valid?(move) || ally?(move) || enemy?(move)
     valid_moves << move
 
     move = [row += step, col]

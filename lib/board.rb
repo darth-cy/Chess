@@ -13,12 +13,24 @@ class Board
   def self.standard_board
     b = Board.new
     b.set_pieces
-
     b
   end
 
   def valid?(move)
     move.all? { |el| el.between?(0, 7) }
+  end
+
+  def valid_moves(pos)
+    piece_moves = self[pos].moves
+    possible_moves = []
+
+    piece_moves.each do |pair|
+      possible_move = self.dup.move(pos, pair)
+      possible_moves << pair if !possible_move.in_check?(self[pos].color)
+    end
+
+    possible_moves
+
   end
 
   def set_pieces
@@ -102,8 +114,17 @@ class Board
 
   def move(from, to)
 
+    if self[to].is_enemy?(from)
+      self[to] = EmptyPiece.new
+    end
 
-    false
+    self[from].moved if self[from].is_pawn?
+
+    self[from].change_pos(to)
+    self[to], self[from] = self[from], self[to]
+
+    self
+
   end
 
 end

@@ -22,19 +22,19 @@ class MasterBoard < Board
         color = (r_idx + c_idx) % 2 == 0 ? :red : :black
         color = :yellow if @highlighted_cell == [r_idx, c_idx]
         color = :white if @reachable.include?([r_idx, c_idx])
+        color = :blue if @selected == [r_idx, c_idx]
         print cell.render.colorize(:background => color)
       end
       puts
     end
   end
 
-  def read_command(command)
-    puts "in read_command"
-    move_around(command)
-    select_cell(command)
+  def read_command(player, command)
+    move_around(player, command)
+    select_cell(player, command)
   end
 
-  def move_around(command)
+  def move_around(player, command)
     puts "in move_around"
     return unless CURSOR_DIRECTIONS.include?(command)
     puts command
@@ -53,20 +53,24 @@ class MasterBoard < Board
       move = [@highlighted_cell.first, @highlighted_cell.last + 1]
       @highlighted_cell = move if valid?(move)
     end
-    recalculate
+    recalculate(player)
   end
 
-  def recalculate
-    @reachable = self[@highlighted_cell].moves
+  def recalculate(player)
+    return [] if self[@highlighted_cell].is_enemy?(player)
+    @reachable = self.valid_moves(@highlighted_cell)
   end
 
-  def select_cell(command)
+  def select_cell(player, command)
     return unless command == "RETURN"
 
-    if @selected.nil?
+    if @selected.nil? && self[@highlighted_cell].is_ally?(player)
       @selected = @highlighted_cell
-    elsif !@selected.nil? && @reachable.include?(@highlighted_cell)
+    elsif !@selected.nil? && self.valid_moves(@selected).include?(@highlighted_cell)
       @moved = true if move(@selected, @highlighted_cell)
+      @selected = nil
+    else
+      @selected = nil
     end
 
   end

@@ -28,7 +28,7 @@ class Chess
     until @board.moved?
       @board.render
       command = read_single_key
-      @board.read_command(command)
+      @board.read_command(player, command)
     end
 
   end
@@ -43,3 +43,9 @@ class Chess
   end
 
 end
+
+
+
+
+chess = Chess.new
+chess.play
