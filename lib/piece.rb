@@ -1,4 +1,6 @@
 require_relative 'board'
+require 'time'
+require 'byebug'
 
 ROOK_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1]]
 QUEEN_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
@@ -41,6 +43,18 @@ class Piece
     @color == color
   end
 
+  def king?
+    false
+  end
+
+  def dup
+    Piece.new(@color, @pos, @board, @directions)
+  end
+
+  def render
+    raise "Piece should not render (ambiguous piece)."
+  end
+
 end
 
 class EmptyPiece < Piece
@@ -59,6 +73,14 @@ class EmptyPiece < Piece
 
   def render
     "   "
+  end
+
+  def moves
+    []
+  end
+
+  def dup
+    EmptyPiece.new
   end
 
 end
@@ -109,12 +131,20 @@ class Rook < SlidingPiece
     @color == :W ? " \u2656 ".encode('utf-8') : " \u265C ".encode('utf-8')
   end
 
+  def dup
+    Rook.new(@color, @pos, @board, @directions)
+  end
+
 end
 
 class Queen < SlidingPiece
 
   def render
     @color == :W ? " \u2655 ".encode('utf-8') : " \u265B ".encode('utf-8')
+  end
+
+  def dup
+    Queen.new(@color, @pos, @board, @directions)
   end
 
 end
@@ -125,12 +155,24 @@ class Bishop < SlidingPiece
     @color == :W ? " \u2657 ".encode('utf-8') : " \u265D ".encode('utf-8')
   end
 
+  def dup
+    Bishop.new(@color, @pos, @board, @directions)
+  end
+
 end
 
 class King < SteppingPiece
 
   def render
     @color == :W ? " \u2654 ".encode('utf-8') : " \u265A ".encode('utf-8')
+  end
+
+  def dup
+    King.new(@color, @pos, @board, @directions)
+  end
+
+  def king?
+    true
   end
 
 end
@@ -141,9 +183,14 @@ class Knight < SteppingPiece
     @color == :W ? " \u2658 ".encode('utf-8') : " \u265E ".encode('utf-8')
   end
 
+  def dup
+    Knight.new(@color, @pos, @board, @directions)
+  end
+
 end
 
 class Pawn < SteppingPiece
+  attr_reader :moved
 
   def initialize(color, pos, board = Board.empty_board, directions = [])
     super(color, pos, board = Board.empty_board, directions = [])
@@ -159,7 +206,7 @@ class Pawn < SteppingPiece
 
     attack.each do |pos|
       move = [row + pos.first, col + pos.last]
-      valid_moves << move if enemy?(move)
+      valid_moves << move if valid?(move) && enemy?(move)
     end
 
     step = (@color == :B) ? 1 : -1
@@ -176,6 +223,10 @@ class Pawn < SteppingPiece
 
   def render
     @color == :W ? " \u2659 ".encode('utf-8') : " \u265F ".encode('utf-8')
+  end
+
+  def dup
+    Pawn.new(@color, @pos, @board, @directions)
   end
 
 end
@@ -201,5 +252,18 @@ end
 # pawn.board.rows[2][4] = Knight.new(:B, [2,4], Board.new, KNIGHT_STEPS)
 # p pawn.moves
 
-b = Board.new
+start = Time.now
+
+b = Board.standard_board
+#c = b.dup
+b.rows[6][3] = King.new(:B, [6, 3], b, KING_STEPS)
+#puts
 b.render
+p b.in_check?(:B)
+#puts
+#p c.rows[4][4].moves.count
+
+
+end_t = Time.now
+
+puts "Used Time: #{end_t - start}"
