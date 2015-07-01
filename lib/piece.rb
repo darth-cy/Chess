@@ -133,7 +133,7 @@ class Rook < SlidingPiece
   end
 
   def dup
-    Rook.new(@color, @pos, @board, @directions)
+    Rook.new(@color, @pos, @board)
   end
 
 end
@@ -153,7 +153,7 @@ class Queen < SlidingPiece
   end
 
   def dup
-    Queen.new(@color, @pos, @board, @directions)
+    Queen.new(@color, @pos, @board)
   end
 
 end
@@ -173,7 +173,7 @@ class Bishop < SlidingPiece
   end
 
   def dup
-    Bishop.new(@color, @pos, @board, @directions)
+    Bishop.new(@color, @pos, @board)
   end
 
 end
@@ -193,7 +193,7 @@ class King < SteppingPiece
   end
 
   def dup
-    King.new(@color, @pos, @board, @directions)
+    King.new(@color, @pos, @board)
   end
 
   def king?
@@ -217,7 +217,7 @@ class Knight < SteppingPiece
   end
 
   def dup
-    Knight.new(@color, @pos, @board, @directions)
+    Knight.new(@color, @pos, @board)
   end
 
 end
@@ -259,7 +259,7 @@ class Pawn < SteppingPiece
   end
 
   def dup
-    Pawn.new(@color, @pos, @board, @directions)
+    Pawn.new(@color, @pos, @board)
   end
 
 end
@@ -268,8 +268,8 @@ end
 
 
 
-b = Board.standard_board
-b.render
+# b = Board.standard_board
+# b.render
 
 
 # r = Rook.new(:W, [0,0], Board.new, ROOK_DIRECTIONS)
@@ -286,18 +286,20 @@ b.render
 # pawn.board.rows[2][4] = Knight.new(:B, [2,4], Board.new, KNIGHT_STEPS)
 # p pawn.moves
 
-# start = Time.now
-#
-# b = Board.standard_board
-# #c = b.dup
-# b.rows[6][3] = King.new(:B, [6, 3], b, KING_STEPS)
-# #puts
-# b.render
-# p b.in_check?(:B)
-#puts
-#p c.rows[4][4].moves.count
+start = Time.now
 
-#
-# end_t = Time.now
-#
-# puts "Used Time: #{end_t - start}"
+b = Board.standard_board
+c = b.dup
+c.rows[6][3] = King.new(:B, [6, 3], b)
+puts
+b.render
+puts
+c.render
+# p b.in_check?(:B)
+# puts
+# p c.rows[4][4].moves.count
+
+
+end_t = Time.now
+
+puts "Used Time: #{end_t - start}"

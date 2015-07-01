@@ -46,6 +46,13 @@ class Board
     @rows[row][col]
   end
 
+  def []=(pos, mark)
+    row, col = pos
+    p row
+    p col
+    @rows[row][col] = mark
+  end
+
   def render
     header = "   " + (0..7).to_a.map { |num| " #{num.to_s} " }.join
     puts header
@@ -62,39 +69,31 @@ class Board
   def in_check?(player)
     king_pos =[]
 
-    @rows.each_with_index do |row, r_idx|
-      row.each_with_index do |cell, c_idx|
-        king_pos = [r_idx, c_idx] if cell.king? && cell.color == player
-      end
+    pieces.each do |piece|
+      king_pos = piece.pos if piece.king? && piece.is_ally?(player)
     end
 
-    @rows.each do |row|
-      row.each do |cell|
-        return true if cell.is_enemy?(player) && cell.moves.include?(king_pos)
-      end
+    pieces.each do |piece|
+      return true if piece.is_enemy?(player) && piece.moves.include?(king_pos)
     end
 
     false
 
   end
 
-  def copy_rows
-    copied_rows =[]
+  def pieces
 
-    @rows.each do |row|
-      copied_row = []
-      row.each do |cell|
-        copied_row << cell.dup
-      end
-      copied_rows << copied_row
-    end
+    @rows.flatten.select { |piece| !piece.pos.nil?}
 
-    copied_rows
   end
 
   def dup
-    empty_board = Board.empty_board
-    empty_board.rows = self.copy_rows
+    empty_board = Board.new
+
+    pieces.each do |piece|
+      empty_board[piece.pos] = piece.dup
+    end
+
     empty_board
   end
 
