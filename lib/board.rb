@@ -110,6 +110,9 @@ class Board
 
   def checkmate?(player)
 
+    all_pos = pieces.select { |piece| piece.is_ally?(player) }.map { |piece| piece.pos }
+    all_pos.all? { |pos| valid_moves(pos).empty? }
+
   end
 
   def move(from, to)

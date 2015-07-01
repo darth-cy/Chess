@@ -14,10 +14,10 @@ class MasterBoard < Board
 
   def render
     system "clear"
-    header = "   " + (0..7).to_a.map { |num| " #{num.to_s} " }.join
+    header = "   " + ("a".."h").to_a.map { |letter| " #{letter} " }.join
     puts header
     @rows.each_with_index do |row, r_idx|
-      print " #{r_idx} "
+      print " #{8 - r_idx} "
       row.each_with_index do |cell, c_idx|
         color = (r_idx + c_idx) % 2 == 0 ? :red : :black
         color = :yellow if @highlighted_cell == [r_idx, c_idx]
@@ -35,9 +35,7 @@ class MasterBoard < Board
   end
 
   def move_around(player, command)
-    puts "in move_around"
     return unless CURSOR_DIRECTIONS.include?(command)
-    puts command
     case command
     when 'w'
       move = [@highlighted_cell.first - 1, @highlighted_cell.last]
@@ -47,7 +45,6 @@ class MasterBoard < Board
       @highlighted_cell = move if valid?(move)
     when 'a'
       move = [@highlighted_cell.first, @highlighted_cell.last - 1]
-      p move
       @highlighted_cell = move if valid?(move)
     when 'd'
       move = [@highlighted_cell.first, @highlighted_cell.last + 1]
