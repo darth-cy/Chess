@@ -1,5 +1,7 @@
 require "colorize"
 require 'byebug'
+require_relative 'stepping_piece'
+require_relative 'sliding_piece'
 
 class Board
   attr_accessor :rows
@@ -13,6 +15,10 @@ class Board
     b.set_pieces
 
     b
+  end
+
+  def valid?(move)
+    move.all? { |el| el.between?(0, 7) }
   end
 
   def set_pieces
@@ -36,11 +42,6 @@ class Board
 
   end
 
-
-  def self.empty_board
-    Board.new
-  end
-
   def [](pos)
     row, col = pos
     @rows[row][col]
@@ -48,8 +49,6 @@ class Board
 
   def []=(pos, mark)
     row, col = pos
-    p row
-    p col
     @rows[row][col] = mark
   end
 
@@ -91,10 +90,20 @@ class Board
     empty_board = Board.new
 
     pieces.each do |piece|
-      empty_board[piece.pos] = piece.dup
+      empty_board[piece.pos] = piece.dup(empty_board)
     end
 
     empty_board
+  end
+
+  def checkmate?(player)
+
+  end
+
+  def move(from, to)
+
+
+    false
   end
 
 end
