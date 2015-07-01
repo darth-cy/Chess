@@ -2,21 +2,14 @@ require_relative 'board'
 require 'time'
 require 'byebug'
 
-ROOK_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1]]
-QUEEN_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
-BISHOP_DIRECTIONS = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-KNIGHT_STEPS = [1 , -1, 2, -2].permutation(2).to_a.reject { |direc| direc.first.abs == direc.last.abs }
-KING_STEPS = [[1,0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
-PAWN_STEPS = []
 
 class Piece
-  attr_reader :pos, :directions, :board, :color
+  attr_reader :pos, :board, :color
 
-  def initialize(color, pos, board = Board.empty_board, directions = [])
+  def initialize(color, pos, board = Board.empty_board)
     @color = color
     @pos = pos
     @board = board
-    @directions = directions
   end
 
   def moves
@@ -48,7 +41,7 @@ class Piece
   end
 
   def dup
-    Piece.new(@color, @pos, @board, @directions)
+    Piece.new(@color, @pos, @board)
   end
 
   def render
@@ -126,6 +119,14 @@ end
 
 
 class Rook < SlidingPiece
+  ROOK_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1]]
+
+  attr_reader :directions
+
+  def initialize(*args)
+    super(*args)
+    @directions = ROOK_DIRECTIONS
+  end
 
   def render
     @color == :W ? " \u2656 ".encode('utf-8') : " \u265C ".encode('utf-8')
@@ -138,6 +139,14 @@ class Rook < SlidingPiece
 end
 
 class Queen < SlidingPiece
+  QUEEN_DIRECTIONS = [[1,0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+
+  attr_reader :directions
+
+  def initialize(*args)
+    super(*args)
+    @directions = QUEEN_DIRECTIONS
+  end
 
   def render
     @color == :W ? " \u2655 ".encode('utf-8') : " \u265B ".encode('utf-8')
@@ -150,6 +159,14 @@ class Queen < SlidingPiece
 end
 
 class Bishop < SlidingPiece
+  BISHOP_DIRECTIONS = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+
+  attr_reader :directions
+
+  def initialize(*args)
+    super(*args)
+    @directions = BISHOP_DIRECTIONS
+  end
 
   def render
     @color == :W ? " \u2657 ".encode('utf-8') : " \u265D ".encode('utf-8')
@@ -162,6 +179,14 @@ class Bishop < SlidingPiece
 end
 
 class King < SteppingPiece
+  KING_STEPS = [[1,0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+
+  attr_reader :directions
+
+  def initialize(*args)
+    super(*args)
+    @directions = KING_STEPS
+  end
 
   def render
     @color == :W ? " \u2654 ".encode('utf-8') : " \u265A ".encode('utf-8')
@@ -178,6 +203,14 @@ class King < SteppingPiece
 end
 
 class Knight < SteppingPiece
+  KNIGHT_STEPS = [1 , -1, 2, -2].permutation(2).to_a.reject { |direc| direc.first.abs == direc.last.abs }
+
+  attr_reader :directions
+
+  def initialize(*args)
+    super(*args)
+    @directions = KNIGHT_STEPS
+  end
 
   def render
     @color == :W ? " \u2658 ".encode('utf-8') : " \u265E ".encode('utf-8')
@@ -192,8 +225,8 @@ end
 class Pawn < SteppingPiece
   attr_reader :moved
 
-  def initialize(color, pos, board = Board.empty_board, directions = [])
-    super(color, pos, board = Board.empty_board, directions = [])
+  def initialize(*args)
+    super(*args)
     @moved = false
   end
 
@@ -235,7 +268,8 @@ end
 
 
 
-
+b = Board.standard_board
+b.render
 
 
 # r = Rook.new(:W, [0,0], Board.new, ROOK_DIRECTIONS)
@@ -252,18 +286,18 @@ end
 # pawn.board.rows[2][4] = Knight.new(:B, [2,4], Board.new, KNIGHT_STEPS)
 # p pawn.moves
 
-start = Time.now
-
-b = Board.standard_board
-#c = b.dup
-b.rows[6][3] = King.new(:B, [6, 3], b, KING_STEPS)
-#puts
-b.render
-p b.in_check?(:B)
+# start = Time.now
+#
+# b = Board.standard_board
+# #c = b.dup
+# b.rows[6][3] = King.new(:B, [6, 3], b, KING_STEPS)
+# #puts
+# b.render
+# p b.in_check?(:B)
 #puts
 #p c.rows[4][4].moves.count
 
-
-end_t = Time.now
-
-puts "Used Time: #{end_t - start}"
+#
+# end_t = Time.now
+#
+# puts "Used Time: #{end_t - start}"
