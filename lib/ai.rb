@@ -16,6 +16,7 @@ class ComputerPlayer
   end
 
   def get_move
+    sleep(0.2)
     @sequence_of_commands.shift
   end
 

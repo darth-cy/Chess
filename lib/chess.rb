@@ -44,9 +44,9 @@ class Chess
     until @board.moved?
       if @players[color].require_board?
         @players[color].pass_board(@board.dup, @board.highlighted_cell)
-      else
-        @board.render(color)
       end
+      @board.render(color)
+      
       command = @players[color].get_move
 
       if command == "SAVE"
