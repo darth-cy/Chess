@@ -1,6 +1,8 @@
 require_relative 'board'
 
 class MasterBoard < Board
+  attr_reader :highlighted_cell
+
   CURSOR_DIRECTIONS = ['w', 's', 'a', 'd']
 
   def initialize

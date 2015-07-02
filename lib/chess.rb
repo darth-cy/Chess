@@ -1,14 +1,16 @@
-require_relative 'keypress'
+require_relative 'player'
+require_relative 'ai'
 require_relative 'masterboard'
 require 'byebug'
 require 'yaml'
 
 class Chess
-  include Keypress
 
   def initialize
     @board = MasterBoard.new
-    @players = [:B, :W]
+    @colors = [:B, :W]
+    @players = {:B => ComputerPlayer.new(:B), :W => Player.new }
+    #@players = {:B => ComputerPlayer.new(:B), :W => Player.new }
   end
 
   def start
@@ -27,25 +29,30 @@ class Chess
     until over?
       take_turn
     end
-    @board.render(@players.last)
+    @board.render(@colors.last)
     if checkmate?
-      puts "FINISHED. #{@players.last} is in checkmate and lost the game."
+      puts "FINISHED. #{@colors.last} is in checkmate and lost the game."
     else
-      puts "FINISHED. It is #{@players.last}'s turn and the game is a stalemate"
+      puts "FINISHED. It is #{@colors.last}'s turn and the game is a stalemate"
     end
   end
 
   def take_turn
-    switch_player
+    switch_color
     @board.to_move
-    player = @players.first
+    color = @colors.first
     until @board.moved?
-      @board.render(player)
-      command = read_single_key
+      if @players[color].require_board?
+        @players[color].pass_board(@board.dup, @board.highlighted_cell)
+      else
+        @board.render(color)
+      end
+      command = @players[color].get_move
+
       if command == "SAVE"
         save_game
       else
-        @board.read_command(player, command)
+        @board.read_command(color, command)
       end
     end
   end
@@ -54,22 +61,22 @@ class Chess
     puts "Save Game? (y/n)"
     to_save = (gets.chomp.to_s.strip.downcase == "y")
     if to_save
-      switch_player
+      switch_color
       state = self.to_yaml
       File.open("saved_game.txt", 'w') { |f| f.write(state) }
     end
   end
 
-  def switch_player
-    @players.rotate!
+  def switch_color
+    @colors.rotate!
   end
 
   def checkmate?
-    @board.in_check?(@players.last) && @board.checkmate?(@players.last)
+    @board.in_check?(@colors.last) && @board.checkmate?(@colors.last)
   end
 
   def stalemate?
-    !@board.in_check?(@players.last) && @board.checkmate?(@players.last)
+    !@board.in_check?(@colors.last) && @board.checkmate?(@colors.last)
   end
 
   def over?
