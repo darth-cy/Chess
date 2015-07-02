@@ -24,8 +24,17 @@ class ComputerPlayer
     available_pieces = @board.pieces.select { |piece| piece.is_ally?(@color)}
     available_pieces.reject! { |piece| @board.valid_moves(piece.pos).empty? }
 
-    chosen_piece_pos = available_pieces.sample.pos
-    finishing_pos = @board.valid_moves(chosen_piece_pos).sample
+    attack_pieces = available_pieces.select { |piece| @board.valid_moves(piece.pos).any?{ |cord| @board[cord].is_enemy?(@color) }}
+
+    unless attack_pieces.empty?
+      chosen_piece_pos = attack_pieces.sample.pos
+      finishing_pos = @board.valid_moves(chosen_piece_pos).select { |position| @board[position].is_enemy?(@color)}.sample
+      p chosen_piece_pos
+      p finishing_pos
+    else
+      chosen_piece_pos = available_pieces.sample.pos
+      finishing_pos = @board.valid_moves(chosen_piece_pos).sample
+    end
 
     @sequence_of_commands.concat(build_path(@cursor_pos, chosen_piece_pos))
     @sequence_of_commands.concat(build_path(chosen_piece_pos, finishing_pos))

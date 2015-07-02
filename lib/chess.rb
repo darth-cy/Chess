@@ -9,7 +9,7 @@ class Chess
   def initialize
     @board = MasterBoard.new
     @colors = [:B, :W]
-    @players = {:B => ComputerPlayer.new(:B), :W => Player.new }
+    @players = {:B => ComputerPlayer.new(:B), :W => ComputerPlayer.new(:W ) }
     #@players = {:B => ComputerPlayer.new(:B), :W => Player.new }
   end
 
@@ -46,7 +46,7 @@ class Chess
         @players[color].pass_board(@board.dup, @board.highlighted_cell)
       end
       @board.render(color)
-      
+
       command = @players[color].get_move
 
       if command == "SAVE"
