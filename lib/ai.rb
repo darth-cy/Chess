@@ -1,5 +1,8 @@
+require_relative 'allpiece'
+
 class ComputerPlayer
   attr_reader :sequence_of_commands
+  WORTH = {Pawn => 1, Knight => 3, Bishop => 3, Rook => 5, Queen => 9, King => 99999}
 
   def initialize(color)
     @color = color
@@ -27,10 +30,9 @@ class ComputerPlayer
     attack_pieces = available_pieces.select { |piece| @board.valid_moves(piece.pos).any?{ |cord| @board[cord].is_enemy?(@color) }}
 
     unless attack_pieces.empty?
-      chosen_piece_pos = attack_pieces.sample.pos
+      attack_pieces.sort! { |piece| WORTH[piece.class] }
+      chosen_piece_pos = attack_pieces.first.pos
       finishing_pos = @board.valid_moves(chosen_piece_pos).select { |position| @board[position].is_enemy?(@color)}.sample
-      p chosen_piece_pos
-      p finishing_pos
     else
       chosen_piece_pos = available_pieces.sample.pos
       finishing_pos = @board.valid_moves(chosen_piece_pos).sample

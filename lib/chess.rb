@@ -9,7 +9,7 @@ class Chess
   def initialize
     @board = MasterBoard.new
     @colors = [:B, :W]
-    @players = {:B => ComputerPlayer.new(:B), :W => ComputerPlayer.new(:W ) }
+    @players = {:B => ComputerPlayer.new(:B), :W => Player.new }
     #@players = {:B => ComputerPlayer.new(:B), :W => Player.new }
   end
 
