@@ -11,7 +11,6 @@ class ComputerPlayer
   def pass_board(board, highlighted_cell)
     @board = board
     @cursor_pos = highlighted_cell
-    p sequence_of_commands
     build_move if @sequence_of_commands.empty?
   end
 
