@@ -1,5 +1,4 @@
 require "colorize"
-require 'byebug'
 require_relative 'allpiece'
 
 class Board
