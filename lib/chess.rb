@@ -1,7 +1,6 @@
 require_relative 'player'
 require_relative 'ai'
 require_relative 'masterboard'
-require 'byebug'
 require 'yaml'
 
 class Chess
@@ -9,8 +8,7 @@ class Chess
   def initialize
     @board = MasterBoard.new
     @colors = [:B, :W]
-    @players = {:B => ComputerPlayer.new(:B), :W => Player.new }
-    #@players = {:B => ComputerPlayer.new(:B), :W => Player.new }
+    @players = {:B => ComputerPlayer.new(:B), :W => ComputerPlayer.new(:W) }
   end
 
   def start
