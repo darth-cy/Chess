@@ -8,7 +8,15 @@ class Chess
   def initialize
     @board = MasterBoard.new
     @colors = [:B, :W]
-    @players = {:B => ComputerPlayer.new(:B), :W => ComputerPlayer.new(:W) }
+    
+    # Use this line for Computer v.s. Computer.
+    @players = { :B => ComputerPlayer.new(:B), :W => ComputerPlayer.new(:W) }
+
+    # Use this line for Player v.s. Computer (white first).
+    # @players = { :B => Player.new(:B), :W => ComputerPlayer.new(:W) }
+
+    # User this line for Player v.s. Player.
+    # @players = { :B => Player.new(:B), :W => Player.new(:W) }
   end
 
   def start
