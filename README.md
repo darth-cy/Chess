@@ -8,6 +8,10 @@ This is the chess game played by two AIs. It shows how AIs move the cursor, and 
 
 [ai-fight]: https://www.youtube.com/watch?v=NMLvO75pSBw
 
+### Sample Screenshot ###
+[screenshot][chess]
+[chess]: ./images/chess.png
+
 ### Development Schedule ###
 Day1:
 + Inheritance hierarchy and cordinates-based control.<br/>
@@ -30,4 +34,4 @@ Day2:
 
 ### Future Development Considerations ###
 + Use nodes to emulate the forsight behavior of normal human players. Each node should have a valid "advantage score" measure. The AI then choose the the node that has the highest advantage scores.
-+ Switch to web-based interface. This chess game has Ruby as hard dependencies. It would be nice if it can be translated into a web-based chess interface. 
++ Switch to web-based interface. This chess game has Ruby as hard dependencies. It would be nice if it can be translated into a web-based chess interface.
