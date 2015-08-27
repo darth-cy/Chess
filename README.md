@@ -1,10 +1,20 @@
-### Chess ###
-Implementation of chess using polymorphism and modules.
+# Chess in the Console #
+This console game is jointly developed with [Rehan Alam][rehan-alam]. The development process took in total two days.
 
-### To Run ###
-Run ruby on lib/chess.rb
-+ When prompted for load from saved game options, type n for a freshly set board and type y for a pre-saved game in the directory.
-+ Currently the game is set to computer v.s. computer. To access player mode, uncomment corresponding initialization setup in the chess.rb file.
+[rehan-alam]: https://github.com/ralam
+
+### Development Schedule ###
+Day1:
++ Inheritance hierarchy and cordinates-based control.
+Day2:
++ Integrate keypress.rb keystroke detection library into the game.
++ Wrote computer AI that can construct sequence of keystroke moves.
+
+### How to Run ###
++ You need the latest versions of Ruby to run this game.
++ Download the repository and navigate into the directory using command line.
++ Once you are there, run the command <code>$ bundle install</code>.
++ After that's done, run <code>$ ruby lib/chess.rb</code> (You will be asked if you want to load a saved game. Choose n for now. If you want to save a copy of the game, you can do that during the game play using the ESC key).
 
 ### To See the AI Fight on Youtube ###
 https://www.youtube.com/watch?v=NMLvO75pSBw
