@@ -9,7 +9,8 @@ This is the chess game played by two AIs. It shows how AIs move the cursor, and 
 [ai-fight]: https://www.youtube.com/watch?v=NMLvO75pSBw
 
 ### Sample Screenshot ###
-[screenshot][chess]
+![chess]
+
 [chess]: ./images/chess.png
 
 ### Development Schedule ###
